@@ -6,6 +6,7 @@ from src.tools.memory import get_memory_status
 from src.tools.disk import get_disk_status
 from src.tools.docker import get_docker_status
 from src.tools.services import get_failed_services
+from src.tools.health import get_health_status
 
 
 def run_tool(tool_name):
@@ -25,10 +26,36 @@ def run_tool(tool_name):
     if tool_name == "services":
         return get_failed_services()
 
+    if tool_name == "health":
+        return get_health_status()
+
     return None
 
 
 def answer_question(question):
+
+    q = question.lower()
+
+    if (
+        "health" in q
+        or "healthy" in q
+        or "system status" in q
+        or "server status" in q
+    ):
+
+        tool_output = get_health_status()
+
+        prompt = f"""
+You are a Linux infrastructure assistant.
+
+Using the health report below, provide a concise summary.
+
+Health Report:
+
+{tool_output}
+"""
+
+        return ask_llm(prompt)
 
     tool = choose_tool(question)
 

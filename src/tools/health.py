@@ -7,10 +7,25 @@ from src.tools.services import get_failed_services
 
 def get_health_status():
 
-    return {
-        "gpu": get_gpu_status(),
-        "memory": get_memory_status(),
-        "disk": get_disk_status(),
-        "docker": get_docker_status(),
-        "services": get_failed_services()
-    }
+    gpu = get_gpu_status()
+    memory = get_memory_status()
+    disk = get_disk_status()
+    docker = get_docker_status()
+    services = get_failed_services()
+
+    return f"""
+GPU
+{gpu}
+
+MEMORY
+{memory}
+
+DISK
+{disk}
+
+DOCKER
+{docker}
+
+SERVICES
+{services}
+"""
