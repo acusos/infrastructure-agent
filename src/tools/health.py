@@ -5,6 +5,20 @@ from src.tools.docker import get_docker_status
 from src.tools.services import get_failed_services
 
 
+def get_mount_free_space(disk_output, mountpoint):
+
+    for line in disk_output.splitlines():
+
+        if line.strip().endswith(f" {mountpoint}"):
+
+            parts = line.split()
+
+            if len(parts) >= 6:
+                return parts[3]
+
+    return "unknown"
+
+
 def get_health_status():
 
     gpu = get_gpu_status()
@@ -49,9 +63,12 @@ SERVICES
 {services}
 
 STORAGE
-  Review detailed disk output below.
 
-{disk}
+  /models: {get_mount_free_space(disk, "/models")} free
+  /var/lib/docker: {get_mount_free_space(disk, "/var/lib/docker")} free
+  /data: {get_mount_free_space(disk, "/data")} free
+  /home: {get_mount_free_space(disk, "/home")} free
+  /: {get_mount_free_space(disk, "/")} free
 """
 
     if warnings:
