@@ -8,6 +8,7 @@ from src.tools.docker import get_docker_status
 from src.tools.services import get_failed_services
 from src.tools.health import get_health_status
 from src.tools.logs import get_recent_errors
+from src.tools.container_logs import get_container_logs
 
 
 def run_tool(tool_name):
@@ -40,6 +41,18 @@ def answer_question(question):
 
     q = question.lower()
 
+    if "logs for vllm" in q:
+        return get_container_logs("vllm")
+
+    if "logs for open-webui" in q:
+        return get_container_logs("open-webui")
+
+    if "logs for qdrant" in q:
+        return get_container_logs("qdrant")
+
+    if "logs for litellm" in q:
+        return get_container_logs("litellm")
+
     if (
         "health" in q
         or "healthy" in q
@@ -49,17 +62,14 @@ def answer_question(question):
 
         tool_output = get_health_status()
 
-        prompt = f"""
-You are a Linux infrastructure assistant.
-
-Using the health report below, provide a concise summary.
-
-Health Report:
+        return ask_llm(
+            f"""
+Using the health report below,
+provide a concise summary.
 
 {tool_output}
 """
-
-        return ask_llm(prompt)
+        )
 
     if (
         "error" in q
@@ -73,17 +83,14 @@ Health Report:
 
         tool_output = get_recent_errors()
 
-        prompt = f"""
-You are a Linux infrastructure assistant.
-
-Review these recent errors and provide a concise summary.
-
-Errors:
+        return ask_llm(
+            f"""
+Review these recent errors and
+provide a concise summary.
 
 {tool_output}
 """
-
-        return ask_llm(prompt)
+        )
 
     tool = choose_tool(question)
 
@@ -93,21 +100,14 @@ Errors:
 
     tool_output = run_tool(tool)
 
-    prompt = f"""
-You are a Linux infrastructure assistant.
-
+    return ask_llm(
+        f"""
 User question:
 {question}
-
-Selected tool:
-{tool}
 
 Tool output:
 {tool_output}
 
 Answer using ONLY the tool output.
-
-Be concise.
 """
-
-    return ask_llm(prompt)
+    )
