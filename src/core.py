@@ -7,6 +7,7 @@ from src.tools.disk import get_disk_status
 from src.tools.docker import get_docker_status
 from src.tools.services import get_failed_services
 from src.tools.health import get_health_status
+from src.tools.logs import get_recent_errors
 
 
 def run_tool(tool_name):
@@ -28,6 +29,9 @@ def run_tool(tool_name):
 
     if tool_name == "health":
         return get_health_status()
+
+    if tool_name == "logs":
+        return get_recent_errors()
 
     return None
 
@@ -51,6 +55,30 @@ You are a Linux infrastructure assistant.
 Using the health report below, provide a concise summary.
 
 Health Report:
+
+{tool_output}
+"""
+
+        return ask_llm(prompt)
+
+    if (
+        "error" in q
+        or "errors" in q
+        or "failed" in q
+        or "failure" in q
+        or "problem" in q
+        or "problems" in q
+        or "logs" in q
+    ):
+
+        tool_output = get_recent_errors()
+
+        prompt = f"""
+You are a Linux infrastructure assistant.
+
+Review these recent errors and provide a concise summary.
+
+Errors:
 
 {tool_output}
 """
