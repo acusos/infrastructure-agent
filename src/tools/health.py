@@ -13,19 +13,56 @@ def get_health_status():
     docker = get_docker_status()
     services = get_failed_services()
 
-    return f"""
+    warnings = []
+
+    if gpu["memory_free_mib"] < 2048:
+        warnings.append(
+            f"Low GPU free memory ({gpu['memory_free_mib']} MiB)"
+        )
+
+    if gpu["temperature_c"] > 80:
+        warnings.append(
+            f"High GPU temperature ({gpu['temperature_c']}C)"
+        )
+
+    docker_count = max(
+        len(docker.strip().splitlines()) - 1,
+        0
+    )
+
+    report = f"""
+AI SERVER HEALTH
+
 GPU
-{gpu}
+  Model: {gpu['name']}
+  VRAM Free: {gpu['memory_free_mib']} MiB
+  VRAM Used: {gpu['memory_used_mib']} MiB
+  Temperature: {gpu['temperature_c']}C
 
 MEMORY
 {memory}
 
-DISK
-{disk}
-
 DOCKER
-{docker}
+  Running Containers: {docker_count}
 
 SERVICES
 {services}
+
+STORAGE
+  Review detailed disk output below.
+
+{disk}
 """
+
+    if warnings:
+
+        report += "\nWARNINGS\n"
+
+        for warning in warnings:
+            report += f"  - {warning}\n"
+
+    else:
+
+        report += "\nWARNINGS\n  None\n"
+
+    return report
