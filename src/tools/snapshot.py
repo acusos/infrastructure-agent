@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
+from datetime import datetime
 
-from src.tools.system_check import run_system_check
+from src.tools.system_metrics import get_system_metrics
 
 
 SNAPSHOT_FILE = Path("snapshots/latest.json")
@@ -15,7 +16,8 @@ def save_snapshot():
     )
 
     data = {
-        "report": run_system_check()
+        "timestamp": datetime.now().isoformat(),
+        "metrics": get_system_metrics(),
     }
 
     SNAPSHOT_FILE.write_text(
@@ -42,21 +44,97 @@ def compare_snapshot():
     if not previous:
         return "No snapshot exists."
 
-    current = run_system_check()
+    current = get_system_metrics()
+    old = previous["metrics"]
 
-    old_report = previous["report"]
+    changes = []
 
-    if old_report == current:
-        return "No changes since last snapshot."
+    #
+    # GPU
+    #
 
-    return f"""
-CHANGES DETECTED
+    if (
+        old["gpu"]["temperature_c"]
+        != current["gpu"]["temperature_c"]
+    ):
+        changes.append(
+            f"GPU temperature: "
+            f'{old["gpu"]["temperature_c"]}C -> '
+            f'{current["gpu"]["temperature_c"]}C'
+        )
 
-PREVIOUS SNAPSHOT
------------------
-{old_report[:1000]}
+    if (
+        old["gpu"]["memory_used_mib"]
+        != current["gpu"]["memory_used_mib"]
+    ):
+        changes.append(
+            f"GPU memory used: "
+            f'{old["gpu"]["memory_used_mib"]} MiB -> '
+            f'{current["gpu"]["memory_used_mib"]} MiB'
+        )
 
-CURRENT SNAPSHOT
-----------------
-{current[:1000]}
-""".strip()
+    #
+    # Memory
+    #
+
+    if (
+        old["memory"]["used_gb"]
+        != current["memory"]["used_gb"]
+    ):
+        changes.append(
+            f"RAM used: "
+            f'{old["memory"]["used_gb"]} GB -> '
+            f'{current["memory"]["used_gb"]} GB'
+        )
+
+    #
+    # Docker
+    #
+
+    if (
+        old["docker"]["running_containers"]
+        != current["docker"]["running_containers"]
+    ):
+        changes.append(
+            f"Running containers: "
+            f'{old["docker"]["running_containers"]} -> '
+            f'{current["docker"]["running_containers"]}'
+        )
+
+    #
+    # Services
+    #
+
+    for service in (
+        "vllm",
+        "litellm",
+        "qdrant",
+        "open_webui",
+    ):
+
+        if old[service] != current[service]:
+
+            changes.append(
+                f"{service}: "
+                f'{old[service]} -> {current[service]}'
+            )
+
+    if not changes:
+
+        return "No significant changes since last snapshot."
+
+    report = []
+
+    report.append("SNAPSHOT COMPARISON")
+    report.append("")
+    report.append(
+        f"Snapshot Time: {previous['timestamp']}"
+    )
+    report.append("")
+    report.append("CHANGES")
+    report.append("-------")
+
+    for change in changes:
+        report.append(change)
+
+    return "\n".join(report)
