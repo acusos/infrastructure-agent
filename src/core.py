@@ -12,6 +12,7 @@ from src.tools.logs import get_recent_errors
 from src.tools.container_logs import get_container_logs
 from src.tools.container_restart import restart_container
 from src.tools.container_status import get_container_status
+from src.tools.container_diagnose import diagnose_container
 
 
 def run_tool(tool_name):
@@ -41,8 +42,24 @@ def run_tool(tool_name):
 
 
 def answer_question(question):
-    print(f"QUESTION RECEIVED: {question}")
+
     q = question.lower()
+
+    #
+    # Container Diagnosis
+    #
+
+    if "diagnose vllm" in q:
+        return diagnose_container("vllm")
+
+    if "diagnose litellm" in q:
+        return diagnose_container("litellm")
+
+    if "diagnose qdrant" in q or "diagnose quadrant" in q:
+        return diagnose_container("qdrant")
+
+    if "diagnose open-webui" in q:
+        return diagnose_container("open-webui")
 
     #
     # Container Status
@@ -62,7 +79,10 @@ def answer_question(question):
     ):
         return get_container_status("litellm")
 
-    if "qdrant" in q and (
+    if (
+        "qdrant" in q
+        or "quadrant" in q
+    ) and (
         "status" in q
         or "healthy" in q
         or "health" in q
@@ -86,7 +106,7 @@ def answer_question(question):
     if "restart litellm" in q:
         return restart_container("litellm")
 
-    if "restart qdrant" in q:
+    if "restart qdrant" in q or "restart quadrant" in q:
         return restart_container("qdrant")
 
     if "restart open-webui" in q:
@@ -102,7 +122,7 @@ def answer_question(question):
     if "logs for litellm" in q:
         return get_container_logs("litellm")
 
-    if "logs for qdrant" in q:
+    if "logs for qdrant" in q or "logs for quadrant" in q:
         return get_container_logs("qdrant")
 
     if "logs for open-webui" in q:
