@@ -21,6 +21,8 @@ from src.tools.container_check import (
     check_open_webui,
 )
 
+from src.tools.system_check import run_system_check
+
 
 def run_tool(tool_name):
 
@@ -51,6 +53,17 @@ def run_tool(tool_name):
 def answer_question(question):
 
     q = question.lower()
+
+    #
+    # Full System Check
+    #
+
+    if (
+        "system check" in q
+        or "full system check" in q
+        or "check entire server" in q
+    ):
+        return run_system_check()
 
     #
     # Service Checks
