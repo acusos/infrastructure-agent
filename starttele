@@ -1,0 +1,4 @@
+cd /data/projects/agents/infrastructure-agent
+source .venv/bin/activate
+python telegram_bot.py &
+
