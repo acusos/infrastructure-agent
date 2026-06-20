@@ -9,6 +9,7 @@ from src.tools.services import get_failed_services
 from src.tools.health import get_health_status
 from src.tools.logs import get_recent_errors
 from src.tools.container_logs import get_container_logs
+from src.tools.container_restart import restart_container
 
 
 def run_tool(tool_name):
@@ -41,17 +42,41 @@ def answer_question(question):
 
     q = question.lower()
 
+    #
+    # Container restarts
+    #
+
+    if "restart vllm" in q:
+        return restart_container("vllm")
+
+    if "restart litellm" in q:
+        return restart_container("litellm")
+
+    if "restart qdrant" in q:
+        return restart_container("qdrant")
+
+    if "restart open-webui" in q:
+        return restart_container("open-webui")
+
+    #
+    # Container logs
+    #
+
     if "logs for vllm" in q:
         return get_container_logs("vllm")
 
-    if "logs for open-webui" in q:
-        return get_container_logs("open-webui")
+    if "logs for litellm" in q:
+        return get_container_logs("litellm")
 
     if "logs for qdrant" in q:
         return get_container_logs("qdrant")
 
-    if "logs for litellm" in q:
-        return get_container_logs("litellm")
+    if "logs for open-webui" in q:
+        return get_container_logs("open-webui")
+
+    #
+    # Health
+    #
 
     if (
         "health" in q
@@ -70,6 +95,10 @@ provide a concise summary.
 {tool_output}
 """
         )
+
+    #
+    # Errors
+    #
 
     if (
         "error" in q
@@ -95,7 +124,6 @@ provide a concise summary.
     tool = choose_tool(question)
 
     if tool == "none":
-
         return ask_llm(question)
 
     tool_output = run_tool(tool)
