@@ -8,8 +8,10 @@ from src.tools.docker import get_docker_status
 from src.tools.services import get_failed_services
 from src.tools.health import get_health_status
 from src.tools.logs import get_recent_errors
+
 from src.tools.container_logs import get_container_logs
 from src.tools.container_restart import restart_container
+from src.tools.container_status import get_container_status
 
 
 def run_tool(tool_name):
@@ -43,7 +45,39 @@ def answer_question(question):
     q = question.lower()
 
     #
-    # Container restarts
+    # Container Status
+    #
+
+    if "vllm" in q and (
+        "status" in q
+        or "healthy" in q
+        or "health" in q
+    ):
+        return get_container_status("vllm")
+
+    if "litellm" in q and (
+        "status" in q
+        or "healthy" in q
+        or "health" in q
+    ):
+        return get_container_status("litellm")
+
+    if "qdrant" in q and (
+        "status" in q
+        or "healthy" in q
+        or "health" in q
+    ):
+        return get_container_status("qdrant")
+
+    if "open-webui" in q and (
+        "status" in q
+        or "healthy" in q
+        or "health" in q
+    ):
+        return get_container_status("open-webui")
+
+    #
+    # Container Restarts
     #
 
     if "restart vllm" in q:
@@ -59,7 +93,7 @@ def answer_question(question):
         return restart_container("open-webui")
 
     #
-    # Container logs
+    # Container Logs
     #
 
     if "logs for vllm" in q:
@@ -75,7 +109,7 @@ def answer_question(question):
         return get_container_logs("open-webui")
 
     #
-    # Health
+    # Server Health
     #
 
     if (
@@ -85,14 +119,14 @@ def answer_question(question):
         or "server status" in q
     ):
 
-        tool_output = get_health_status()
+        report = get_health_status()
 
         return ask_llm(
             f"""
 Using the health report below,
 provide a concise summary.
 
-{tool_output}
+{report}
 """
         )
 
@@ -110,14 +144,14 @@ provide a concise summary.
         or "logs" in q
     ):
 
-        tool_output = get_recent_errors()
+        errors = get_recent_errors()
 
         return ask_llm(
             f"""
 Review these recent errors and
 provide a concise summary.
 
-{tool_output}
+{errors}
 """
         )
 
