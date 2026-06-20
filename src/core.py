@@ -41,7 +41,7 @@ def run_tool(tool_name):
 
 
 def answer_question(question):
-
+    print(f"QUESTION RECEIVED: {question}")
     q = question.lower()
 
     #
