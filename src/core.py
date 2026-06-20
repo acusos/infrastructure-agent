@@ -14,6 +14,13 @@ from src.tools.container_restart import restart_container
 from src.tools.container_status import get_container_status
 from src.tools.container_diagnose import diagnose_container
 
+from src.tools.container_check import (
+    check_vllm,
+    check_litellm,
+    check_qdrant,
+    check_open_webui,
+)
+
 
 def run_tool(tool_name):
 
@@ -44,6 +51,22 @@ def run_tool(tool_name):
 def answer_question(question):
 
     q = question.lower()
+
+    #
+    # Service Checks
+    #
+
+    if "check vllm" in q:
+        return check_vllm()
+
+    if "check litellm" in q:
+        return check_litellm()
+
+    if "check qdrant" in q or "check quadrant" in q:
+        return check_qdrant()
+
+    if "check open-webui" in q:
+        return check_open_webui()
 
     #
     # Container Diagnosis
