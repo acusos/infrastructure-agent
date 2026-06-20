@@ -23,6 +23,11 @@ from src.tools.container_check import (
 
 from src.tools.system_check import run_system_check
 
+from src.tools.snapshot import (
+    save_snapshot,
+    compare_snapshot,
+)
+
 
 def run_tool(tool_name):
 
@@ -64,6 +69,23 @@ def answer_question(question):
         or "check entire server" in q
     ):
         return run_system_check()
+
+    #
+    # Snapshots
+    #
+
+    if (
+        "save snapshot" in q
+        or "take snapshot" in q
+    ):
+        return save_snapshot()
+
+    if (
+        "compare snapshot" in q
+        or "compare snapshots" in q
+        or "snapshot compare" in q
+    ):
+        return compare_snapshot()
 
     #
     # Service Checks
