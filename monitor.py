@@ -1,6 +1,5 @@
 import time
 
-from src.tools.alerts import check_alerts
 from src.tools.telegram_sender import send_telegram_message
 
 from src.tools.container_check import (
@@ -13,6 +12,10 @@ from src.tools.container_check import (
 from src.tools.service_states import (
     load_states,
     save_states,
+)
+
+from src.tools.auto_recovery import (
+    recover_service,
 )
 
 
@@ -29,6 +32,13 @@ def get_current_states():
     }
 
 
+def is_healthy(status):
+
+    return (
+        status.endswith(" healthy")
+    )
+
+
 def monitor():
 
     print("InfraBot Monitor Started")
@@ -41,10 +51,6 @@ def monitor():
 
             current = get_current_states()
 
-            #
-            # Recovery / Failure Detection
-            #
-
             for service, status in current.items():
 
                 old_status = previous.get(service)
@@ -54,7 +60,22 @@ def monitor():
                     and old_status != status
                 ):
 
-                    if "healthy" in status:
+                    old_healthy = is_healthy(
+                        old_status
+                    )
+
+                    new_healthy = is_healthy(
+                        status
+                    )
+
+                    #
+                    # Recovery
+                    #
+
+                    if (
+                        not old_healthy
+                        and new_healthy
+                    ):
 
                         send_telegram_message(
                             f"✅ InfraBot Recovery\n\n"
@@ -65,29 +86,38 @@ def monitor():
                             f"{service} recovered"
                         )
 
-                    else:
+                    #
+                    # Failure
+                    #
+
+                    elif (
+                        old_healthy
+                        and not new_healthy
+                    ):
 
                         send_telegram_message(
                             f"🚨 InfraBot Alert\n\n"
-                            f"{service} unhealthy"
+                            f"{service} unhealthy\n\n"
+                            f"Attempting recovery..."
                         )
 
-                        print(
-                            f"{service} failed"
+                        success, message = (
+                            recover_service(service)
                         )
 
-            #
-            # General Alerts
-            #
+                        if success:
 
-            alerts = check_alerts()
+                            send_telegram_message(
+                                f"⚠️ InfraBot Auto Recovery\n\n"
+                                f"{message}"
+                            )
 
-            if alerts != "No alerts":
+                        else:
 
-                send_telegram_message(
-                    f"🚨 InfraBot Alert\n\n"
-                    f"{alerts}"
-                )
+                            send_telegram_message(
+                                f"🚨 InfraBot Critical\n\n"
+                                f"{message}"
+                            )
 
             save_states(current)
 
