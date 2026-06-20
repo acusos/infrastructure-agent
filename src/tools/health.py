@@ -29,10 +29,7 @@ def get_health_status():
 
     warnings = []
 
-    docker_count = max(
-        len(docker.strip().splitlines()) - 1,
-        0
-    )
+    docker_count = docker["running_containers"]
 
     if gpu["temperature_c"] > 80:
         warnings.append(
