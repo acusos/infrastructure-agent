@@ -3,44 +3,95 @@ import time
 from src.tools.alerts import check_alerts
 from src.tools.telegram_sender import send_telegram_message
 
+from src.tools.container_check import (
+    check_vllm,
+    check_litellm,
+    check_qdrant,
+    check_open_webui,
+)
 
-CHECK_INTERVAL = 300
+from src.tools.service_states import (
+    load_states,
+    save_states,
+)
+
+
+CHECK_INTERVAL = 30
+
+
+def get_current_states():
+
+    return {
+        "vllm": check_vllm(),
+        "litellm": check_litellm(),
+        "qdrant": check_qdrant(),
+        "open-webui": check_open_webui(),
+    }
 
 
 def monitor():
 
     print("InfraBot Monitor Started")
 
-    last_alert = None
+    previous = load_states()
 
     while True:
 
         try:
 
-            result = check_alerts()
+            current = get_current_states()
 
-            if result != "No alerts":
+            #
+            # Recovery / Failure Detection
+            #
 
-                if result != last_alert:
+            for service, status in current.items():
 
-                    message = (
-                        "🚨 InfraBot Alert\n\n"
-                        f"{result}"
-                    )
+                old_status = previous.get(service)
 
-                    send_telegram_message(
-                        message
-                    )
+                if (
+                    old_status
+                    and old_status != status
+                ):
 
-                    print(
-                        f"Alert sent: {result}"
-                    )
+                    if "healthy" in status:
 
-                    last_alert = result
+                        send_telegram_message(
+                            f"✅ InfraBot Recovery\n\n"
+                            f"{service} healthy again"
+                        )
 
-            else:
+                        print(
+                            f"{service} recovered"
+                        )
 
-                last_alert = None
+                    else:
+
+                        send_telegram_message(
+                            f"🚨 InfraBot Alert\n\n"
+                            f"{service} unhealthy"
+                        )
+
+                        print(
+                            f"{service} failed"
+                        )
+
+            #
+            # General Alerts
+            #
+
+            alerts = check_alerts()
+
+            if alerts != "No alerts":
+
+                send_telegram_message(
+                    f"🚨 InfraBot Alert\n\n"
+                    f"{alerts}"
+                )
+
+            save_states(current)
+
+            previous = current
 
             time.sleep(
                 CHECK_INTERVAL
