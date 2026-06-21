@@ -7,22 +7,32 @@ from src.tools.system_metrics import (
 )
 
 
-SNAPSHOT_FILE = Path(
-    "snapshots/latest.json"
+SNAPSHOT_DIR = Path(
+    "snapshots"
+)
+
+SNAPSHOT_FILE = (
+    SNAPSHOT_DIR / "latest.json"
 )
 
 
 def save_snapshot():
 
-    SNAPSHOT_FILE.parent.mkdir(
+    SNAPSHOT_DIR.mkdir(
         parents=True,
         exist_ok=True,
     )
 
+    now = datetime.now()
+
     data = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": now.isoformat(),
         "metrics": get_system_metrics(),
     }
+
+    #
+    # Update latest snapshot
+    #
 
     SNAPSHOT_FILE.write_text(
         json.dumps(
@@ -31,9 +41,28 @@ def save_snapshot():
         )
     )
 
+    #
+    # Create historical snapshot
+    #
+
+    archive_file = (
+        SNAPSHOT_DIR
+        / now.strftime(
+            "%Y-%m-%d_%H%M%S.json"
+        )
+    )
+
+    archive_file.write_text(
+        json.dumps(
+            data,
+            indent=2,
+        )
+    )
+
     return (
-        f"Snapshot saved to "
-        f"{SNAPSHOT_FILE}"
+        f"Snapshot saved:\n"
+        f"Latest: {SNAPSHOT_FILE}\n"
+        f"Archive: {archive_file.name}"
     )
 
 
@@ -45,6 +74,27 @@ def load_snapshot():
     return json.loads(
         SNAPSHOT_FILE.read_text()
     )
+
+
+def list_snapshots():
+
+    if not SNAPSHOT_DIR.exists():
+        return []
+
+    snapshots = []
+
+    for file in sorted(
+        SNAPSHOT_DIR.glob("*.json")
+    ):
+
+        if file.name == "latest.json":
+            continue
+
+        snapshots.append(
+            file.name
+        )
+
+    return snapshots
 
 
 def compare_snapshot():
@@ -173,10 +223,12 @@ def compare_snapshot():
     report.append(
         "SNAPSHOT COMPARISON"
     )
+
     report.append("")
 
     report.append(
         f"Snapshot Age: "
+        f"{age.days}d "
         f"{age.seconds // 3600}h "
         f"{(age.seconds % 3600) // 60}m"
     )
