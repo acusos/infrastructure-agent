@@ -18,8 +18,13 @@ from src.tools.auto_recovery import (
     recover_service,
 )
 
+from src.tools.snapshot import (
+    save_snapshot,
+)
+
 
 CHECK_INTERVAL = 30
+SNAPSHOT_INTERVAL = 3600
 
 
 def get_current_states():
@@ -44,6 +49,8 @@ def monitor():
     print("InfraBot Monitor Started")
 
     previous = load_states()
+
+    last_snapshot = 0
 
     while True:
 
@@ -118,6 +125,31 @@ def monitor():
                                 f"🚨 InfraBot Critical\n\n"
                                 f"{message}"
                             )
+
+            #
+            # Hourly snapshots
+            #
+
+            now = time.time()
+
+            if (
+                now - last_snapshot
+                >= SNAPSHOT_INTERVAL
+            ):
+
+                try:
+
+                    result = save_snapshot()
+
+                    print(result)
+
+                    last_snapshot = now
+
+                except Exception as e:
+
+                    print(
+                        f"Snapshot error: {e}"
+                    )
 
             save_states(current)
 
