@@ -28,6 +28,10 @@ from src.tools.snapshot import (
     compare_snapshot,
 )
 
+from src.tools.history import (
+    get_snapshot_history,
+)
+
 
 def run_tool(tool_name):
 
@@ -86,6 +90,17 @@ def answer_question(question):
         or "snapshot compare" in q
     ):
         return compare_snapshot()
+
+    #
+    # Snapshot History
+    #
+
+    if (
+        "snapshot history" in q
+        or "show snapshot history" in q
+        or q == "history"
+    ):
+        return get_snapshot_history()
 
     #
     # Service Checks
