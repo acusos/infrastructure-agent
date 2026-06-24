@@ -51,6 +51,7 @@ class LLMClient:
         self._base_url = self.config.base_url.rstrip("/")
         self._model = self.config.model
         self._temperature = self.config.temperature
+        self._api_key = "local"  # Required for local OpenAI-compatible endpoints
 
         # Configure LiteLLM to use the local OpenAI-compatible endpoint
         litellm.set_verbose = True
@@ -78,6 +79,7 @@ class LLMClient:
             messages=messages,
             base_url=self._base_url,
             temperature=self._temperature,
+            api_key=self._api_key,
         )
 
         return response.choices[0].message.content

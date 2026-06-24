@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
+import uuid
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from infra_agent_v2.config import Config
 from infra_agent_v2.utils.logging import setup_logging
@@ -78,8 +80,15 @@ class QdrantMemoryStore:
         self._initialized = False
 
     @staticmethod
-    def _build_client() -> QdrantClient:
-        return QdrantClient(host="localhost", port=6333)
+    def _to_qdrant_id(incident_id: str):
+        """Convert an incident ID to a Qdrant-compatible point ID (UUID or int)."""
+        try:
+            return uuid.UUID(incident_id)
+        except ValueError:
+            return int(hashlib.md5(incident_id.encode()).hexdigest()[:16], 16)
+
+    def _build_client(self) -> QdrantClient:
+        return QdrantClient(host=self.config.host, port=self.config.port)
 
     def connect(self) -> None:
         """Ensure the client is connected and the collection exists."""
@@ -113,11 +122,12 @@ class QdrantMemoryStore:
         vec = vector if vector is not None else [0.0] * self.DEFAULT_DIM
         payload = incident.to_payload()
 
+        qdrant_id = self._to_qdrant_id(incident.id)
         self.client.upsert(
             collection_name=self.config.collection,
             points=[
                 models.PointStruct(
-                    id=incident.id,
+                    id=qdrant_id,
                     vector=vec,
                     payload=payload,
                 ),
@@ -130,7 +140,7 @@ class QdrantMemoryStore:
 
         results = self.client.retrieve(
             collection_name=self.config.collection,
-            ids=[incident_id],
+            ids=[self._to_qdrant_id(incident_id)],
         )
         if not results:
             return None
@@ -162,7 +172,11 @@ class QdrantMemoryStore:
             self.connect()
 
         info = self.client.get_collection(self.config.collection)
-        return int(info.vectors_count) if hasattr(info, 'vectors_count') else 0
+        vc = getattr(info, 'vectors_count', None)
+        if vc is not None:
+            return int(vc)
+        pc = getattr(info, 'points_count', None)
+        return int(pc) if pc is not None else 0
 
     def delete_incident(self, incident_id: str) -> bool:
         if not self._initialized:
@@ -171,7 +185,7 @@ class QdrantMemoryStore:
         try:
             self.client.delete(
                 collection_name=self.config.collection,
-                points_selector=models.PointIdsList(points=[incident_id]),
+                points_selector=models.PointIdsList(points=[self._to_qdrant_id(incident_id)]),
             )
             return True
         except Exception:
