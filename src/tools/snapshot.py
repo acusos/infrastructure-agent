@@ -204,7 +204,7 @@ def compare_snapshot():
     service_changes = []
 
     for service in (
-        "vllm",
+        "llama-cpp",
         "litellm",
         "qdrant",
         "open_webui",

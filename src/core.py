@@ -15,7 +15,7 @@ from src.tools.container_status import get_container_status
 from src.tools.container_diagnose import diagnose_container
 
 from src.tools.container_check import (
-    check_vllm,
+    check_llamacpp,
     check_litellm,
     check_qdrant,
     check_open_webui,
@@ -106,8 +106,8 @@ def answer_question(question):
     # Service Checks
     #
 
-    if "check vllm" in q:
-        return check_vllm()
+    if "check llama-cpp" in q:
+        return check_llamacpp()
 
     if "check litellm" in q:
         return check_litellm()
@@ -122,8 +122,8 @@ def answer_question(question):
     # Container Diagnosis
     #
 
-    if "diagnose vllm" in q:
-        return diagnose_container("vllm")
+    if "diagnose llama-cpp" in q:
+        return diagnose_container("llama-cpp")
 
     if "diagnose litellm" in q:
         return diagnose_container("litellm")
@@ -138,12 +138,12 @@ def answer_question(question):
     # Container Status
     #
 
-    if "vllm" in q and (
+    if "llama-cpp" in q and (
         "status" in q
         or "healthy" in q
         or "health" in q
     ):
-        return get_container_status("vllm")
+        return get_container_status("llama-cpp")
 
     if "litellm" in q and (
         "status" in q
@@ -173,8 +173,8 @@ def answer_question(question):
     # Container Restarts
     #
 
-    if "restart vllm" in q:
-        return restart_container("vllm")
+    if "restart llama-cpp" in q:
+        return restart_container("llama-cpp")
 
     if "restart litellm" in q:
         return restart_container("litellm")
@@ -189,8 +189,8 @@ def answer_question(question):
     # Container Logs
     #
 
-    if "logs for vllm" in q:
-        return get_container_logs("vllm")
+    if "logs for llama-cpp" in q:
+        return get_container_logs("llama-cpp")
 
     if "logs for litellm" in q:
         return get_container_logs("litellm")

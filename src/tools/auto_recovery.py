@@ -3,7 +3,7 @@ import time
 from src.tools.container_restart import restart_container
 
 from src.tools.container_check import (
-    check_vllm,
+    check_llamacpp,
     check_litellm,
     check_qdrant,
     check_open_webui,
@@ -13,7 +13,7 @@ from src.tools.container_check import (
 def recover_service(service):
 
     checks = {
-        "vllm": check_vllm,
+        "llamacpp": check_llamacpp,
         "litellm": check_litellm,
         "qdrant": check_qdrant,
         "open-webui": check_open_webui,

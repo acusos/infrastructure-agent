@@ -1,5 +1,5 @@
 {
-  "vllm": "vllm healthy",
+  "llama-cpp": "llama-cpp healthy",
   "litellm": "litellm healthy",
   "qdrant": "qdrant healthy",
   "open-webui": "open-webui healthy"

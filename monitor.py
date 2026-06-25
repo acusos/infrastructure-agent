@@ -3,7 +3,7 @@ import time
 from src.tools.telegram_sender import send_telegram_message
 
 from src.tools.container_check import (
-    check_vllm,
+    check_llamacpp,
     check_litellm,
     check_qdrant,
     check_open_webui,
@@ -30,7 +30,7 @@ SNAPSHOT_INTERVAL = 3600
 def get_current_states():
 
     return {
-        "vllm": check_vllm(),
+        "llama-cpp": check_llamacpp(),
         "litellm": check_litellm(),
         "qdrant": check_qdrant(),
         "open-webui": check_open_webui(),

@@ -1,5 +1,5 @@
 from src.tools.container_check import (
-    check_vllm,
+    check_llamacpp,
     check_litellm,
     check_qdrant,
     check_open_webui,
@@ -18,7 +18,7 @@ def run_system_check():
 
     report.append("SERVICES")
     report.append("--------")
-    report.append(check_vllm())
+    report.append(check_llamacpp())
     report.append(check_litellm())
     report.append(check_qdrant())
     report.append(check_open_webui())

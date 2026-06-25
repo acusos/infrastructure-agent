@@ -1,23 +1,22 @@
 import requests
 
-
-def check_vllm():
+def check_llamacpp():
 
     try:
 
         r = requests.get(
-            "http://127.0.0.1:8000/v1/models",
+            "http://127.0.0.1:8080/health",
             timeout=10,
         )
 
         if r.status_code == 200:
-            return "vllm healthy"
+            return "llama-cpp healthy"
 
-        return f"vllm unhealthy (HTTP {r.status_code})"
+        return f"llama-cpp unhealthy (HTTP {r.status_code})"
 
     except Exception as e:
 
-        return f"vllm unhealthy ({e})"
+        return f"llama-cpp unhealthy ({e})"
 
 
 def check_qdrant():

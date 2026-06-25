@@ -2,7 +2,7 @@ import subprocess
 
 
 ALLOWED_CONTAINERS = {
-    "vllm",
+    "llama-cpp",
     "litellm",
     "qdrant",
     "open-webui",

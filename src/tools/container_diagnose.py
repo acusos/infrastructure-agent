@@ -3,7 +3,7 @@ from src.tools.container_logs import get_container_logs
 
 
 ALLOWED_CONTAINERS = {
-    "vllm",
+    "llama-cpp",
     "litellm",
     "qdrant",
     "open-webui",
@@ -37,7 +37,7 @@ def diagnose_container(container_name):
     if "healthy" in status.lower():
         findings.append("Container reports healthy state")
 
-    if container_name == "vllm":
+    if container_name == "llama-cpp":
 
         if "200 OK" in logs:
             findings.append("Model serving operational")
