@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-06-22T15:50:46.048693",
+  "metrics": {
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 5090",
+      "memory_used_mib": 30878,
+      "memory_total_mib": 32607,
+      "memory_free_mib": 1729,
+      "temperature_c": 28
+    },
+    "memory": {
+      "total_gb": 59.2,
+      "available_gb": 53.1,
+      "used_gb": 6.1,
+      "usage_percent": 10.3
+    },
+    "docker": {
+      "running_containers": 4,
+      "containers": [
+        "vllm",
+        "litellm",
+        "qdrant",
+        "open-webui"
+      ]
+    },
+    "vllm": "vllm healthy",
+    "litellm": "litellm healthy",
+    "qdrant": "qdrant healthy",
+    "open_webui": "open-webui healthy"
+  }
+}

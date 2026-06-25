@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-06-25T18:31:10.469747",
+  "metrics": {
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 5090",
+      "memory_used_mib": 26162,
+      "memory_total_mib": 32607,
+      "memory_free_mib": 6445,
+      "temperature_c": 48
+    },
+    "memory": {
+      "total_gb": 59.2,
+      "available_gb": 47.1,
+      "used_gb": 12.1,
+      "usage_percent": 20.5
+    },
+    "docker": {
+      "running_containers": 4,
+      "containers": [
+        "llama-cpp",
+        "open-webui",
+        "litellm",
+        "qdrant"
+      ]
+    },
+    "vllm": "vllm unhealthy (HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /v1/models (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\")))",
+    "litellm": "litellm healthy",
+    "qdrant": "qdrant healthy",
+    "open_webui": "open-webui healthy"
+  }
+}
