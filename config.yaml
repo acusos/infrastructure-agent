@@ -1,0 +1,40 @@
+monitor:
+  poll_interval: 5
+  containers: []
+  resource_thresholds:
+    cpu: 90
+    memory: 90
+
+health:
+  endpoints:
+    - name: app
+      url: http://localhost:8000/health
+      interval: 10
+  tcp_checks:
+    - host: localhost
+      port: 5432
+      interval: 15
+
+recovery:
+  max_restarts: 3
+  restart_cooldown: 60
+  restart_timeout: 30
+
+llm:
+  base_url: http://192.168.20.116:4000
+  model: gpt-4
+  temperature: 0.3
+
+memory:
+  qdrant:
+    host: qdrant
+    port: 6333
+    collection: infra_events
+
+docker:
+  socket: /var/run/docker.sock
+  network: infra_network
+
+dashboard:
+  host: 0.0.0.0
+  port: 8000

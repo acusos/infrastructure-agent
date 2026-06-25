@@ -86,6 +86,10 @@ class DockerConfig:
 class DashboardConfig:
     host: str = "0.0.0.0"
     port: int = 8000
+    auth_mode: str = "basic"
+    auth_username: str = "admin"
+    auth_password: str = "admin"
+    auth_token: str = ""
 
 
 # ---------------------------------------------------------------------------
