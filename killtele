@@ -1,0 +1,2 @@
+A=$(ps -ef | grep [t]ele | awk {'print $2'}) ; echo $A ; kill -9 $A
+ps -ef | grep [t]ele

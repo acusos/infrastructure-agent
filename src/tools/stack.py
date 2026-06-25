@@ -6,7 +6,7 @@ def get_stack_status():
     status = {}
 
     services = {
-        "vllm": "http://127.0.0.1:8000/v1/models",
+        "llama-cpp": "http://127.0.0.1:8080/v1/models",
         "litellm": "http://127.0.0.1:4000/model/info",
         "qdrant": "http://127.0.0.1:6333/",
         "open-webui": "http://127.0.0.1:3000"

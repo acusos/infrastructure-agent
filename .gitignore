@@ -1,9 +1,36 @@
+# Environment
 .env
+.env.*
+!.env.example
+
+# Virtual environments
 .venv/
 venv/
+
+# Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
+
+# Logs
 *.log
+
+# Runtime state
+monitor_state.json
+
+# Generated snapshots
+snapshots/*.json
+!snapshots/.gitkeep
+
+# Test/coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
 .idea/
 .vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
