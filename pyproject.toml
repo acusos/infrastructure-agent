@@ -3,31 +3,21 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
-name = "infra-agent-v2"
+name = "infrastructure-agent"
 version = "0.1.0"
-description = "Container monitoring, incident analysis, and automated recovery agent"
+description = "Infrastructure monitoring agent with Telegram notifications"
 requires-python = ">=3.10"
 dependencies = [
-    "pyyaml==6.0.2",
-    "python-dotenv==1.0.1",
-    "pydantic==2.10.6",
-    "python-dateutil==2.9.0",
-    "docker==7.1.0",
-    "qdrant-client==1.12.1",
-    "litellm>=1.40.0",
-    "openai>=1.20.0",
-    "fastapi>=0.100.0",
-    "uvicorn>=0.23.0",
-    "prometheus-client>=0.19.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    "python-telegram-bot>=22.0",
+    "requests>=2.28",
+    "psutil>=5.9",
+    "openai>=1.20",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest==8.3.4",
-    "pytest-asyncio==0.25.3",
-    "pytest-cov>=6.0.0",
-    "responses==0.25.6",
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
 ]
-
-[project.scripts]
-infra-agent = "infra_agent_v2.main:main"

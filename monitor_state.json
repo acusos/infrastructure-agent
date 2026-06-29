@@ -11,9 +11,9 @@
   "aiclient": "aiclient healthy (all ports open)",
   "crm": "crm healthy (all ports open)",
   "droneworks_au": "droneworks_au healthy (all ports open)",
-  "cpu": "CPU: 0.1%",
-  "memory": "Memory: 23.2% used (13.8/59.2GB)",
+  "cpu": "CPU: 3.2%",
+  "memory": "Memory: 11.5% used (6.8/59.2GB)",
   "disk": "Disk: 37.8% used (70.3/195.8GB)",
-  "network": "Network: RX=280.0MB TX=292.7MB",
-  "shelly_1pm": "shelly_shelly_1pm: 258.0W"
+  "network": "Network: RX=288.7MB TX=305.2MB",
+  "shelly_1pm": "shelly_shelly_1pm: 732.3W"
 }

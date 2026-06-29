@@ -2,9 +2,10 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-COPY pyproject.toml requirements.txt ./
+COPY requirements.txt pyproject.toml ./
 RUN pip install --no-cache-dir -e ".[dev]"
 
 COPY . .
 
-CMD ["infra-agent"]
+ENTRYPOINT ["python"]
+CMD ["monitor.py"]
