@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-06-29T16:07:56.878073",
+  "timestamp": "2026-06-29T18:50:38.534253",
   "metrics": {
     "gpu": {
       "name": "NVIDIA GeForce RTX 5090",
       "memory_used_mib": 27472,
       "memory_total_mib": 32607,
       "memory_free_mib": 5135,
-      "temperature_c": 49
+      "temperature_c": 41
     },
     "memory": {
       "total_gb": 59.2,
-      "available_gb": 52.5,
-      "used_gb": 6.7,
-      "usage_percent": 11.4
+      "available_gb": 43.0,
+      "used_gb": 16.2,
+      "usage_percent": 27.3
     },
     "docker": {
       "running_containers": 4,

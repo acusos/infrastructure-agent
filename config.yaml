@@ -2,8 +2,47 @@ monitor:
   poll_interval: 5
   containers: []
   resource_thresholds:
-    cpu: 90
-    memory: 90
+    cpu: 95
+    memory: 95
+
+servers:
+  - name: droneworks
+    host: 192.168.20.111
+    ports: [22, 80, 443]
+    timeout: 5
+  - name: kali
+    host: 192.168.20.120
+    ports: [22, 80, 443, 8080, 8081]
+    timeout: 5
+  - name: vmserver
+    host: 192.168.20.84
+    ports: [22, 5901]
+    timeout: 5
+  - name: littlebox
+    host: 192.168.20.82
+    ports: [22, 80, 5900, 5901, 5902]
+    timeout: 5
+  - name: ai
+    host: 192.168.20.116
+    ports: [22, 8080]
+    timeout: 5
+  - name: aiclient
+    host: 192.168.20.112
+    ports: [22, 8000, 8002, 11434]
+    timeout: 5
+  - name: crm
+    host: 192.168.20.109
+    ports: [22, 80, 443]
+    timeout: 5
+  - name: droneworks_au
+    host: 139.216.68.122
+    ports: [22, 80, 443]
+    timeout: 5
+
+shellys:
+  - name: shelly_1pm
+    host: 192.168.20.95
+    timeout: 10
 
 health:
   endpoints:

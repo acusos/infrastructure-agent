@@ -51,7 +51,7 @@ def run_tool(tool_name):
         return get_failed_services()
 
     if tool_name == "health":
-        return get_health_status()
+        return run_system_check()
 
     if tool_name == "logs":
         return get_recent_errors()
@@ -212,7 +212,7 @@ def answer_question(question):
         or "server status" in q
     ):
 
-        report = get_health_status()
+        report = run_system_check()
 
         return ask_llm(
             f"""
