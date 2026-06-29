@@ -6,7 +6,6 @@ from src.tools.memory import get_memory_status
 from src.tools.disk import get_disk_status
 from src.tools.docker import get_docker_status
 from src.tools.services import get_failed_services
-from src.tools.health import get_health_status
 from src.tools.logs import get_recent_errors
 
 from src.tools.container_logs import get_container_logs

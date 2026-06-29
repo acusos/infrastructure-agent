@@ -1,5 +1,10 @@
 from src.tools.container_check import (
-    check_llama-cpp,
+    check_llamacpp,
+    check_litellm,
+    check_qdrant,
+    check_open_webui,
+)
+    check_llamacpp,
     check_litellm,
     check_qdrant,
     check_open_webui,
@@ -16,7 +21,7 @@ def check_alerts():
     # Services
     #
 
-    if check_llama-cpp() != "llama-cpp healthy":
+    if check_llamacpp() != "llama-cpp healthy":
         alerts.append("llama-cpp unhealthy")
 
     if check_litellm() != "litellm healthy":

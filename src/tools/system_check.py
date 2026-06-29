@@ -1,4 +1,3 @@
-import os
 import json
 from pathlib import Path
 
@@ -11,8 +10,6 @@ from src.tools.container_check import (
 
 from src.tools.health import get_health_status
 from src.tools.logs import get_recent_errors
-from src.tools.memory import get_memory_status
-from src.tools.disk import get_disk_status
 
 STATE_FILE = Path("monitor_state.json")
 

@@ -9,11 +9,11 @@
   "littlebox": "littlebox healthy (all ports open)",
   "ai": "ai healthy (all ports open)",
   "aiclient": "aiclient healthy (all ports open)",
-  "crm": "crm unhealthy (ports down: [80, 443])",
+  "crm": "crm healthy (all ports open)",
   "droneworks_au": "droneworks_au healthy (all ports open)",
-  "cpu": "CPU: 0.0%",
-  "memory": "Memory: 19.8% used (11.7/59.2GB)",
+  "cpu": "CPU: 0.1%",
+  "memory": "Memory: 23.2% used (13.8/59.2GB)",
   "disk": "Disk: 37.8% used (70.3/195.8GB)",
-  "network": "Network: RX=245.9MB TX=274.6MB",
-  "shelly_1pm": "shelly_shelly_1pm: 222.1W"
+  "network": "Network: RX=280.0MB TX=292.7MB",
+  "shelly_1pm": "shelly_shelly_1pm: 258.0W"
 }
